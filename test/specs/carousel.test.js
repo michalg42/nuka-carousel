@@ -597,5 +597,49 @@ describe('<Carousel />', () => {
       button.simulate('click');
       expect(spy).toHaveBeenCalledWith(2);
     });
+
+    it('should preserve onClick slide event when using wrapAround`.', () => {
+      const mockFn = jest.fn();
+
+      const wrapper = mount(
+        <Carousel wrapAround>
+          <div className="slide-1">
+            <button onClick={mockFn}>Slide 1</button>
+          </div>
+          <div className="slide-2">
+            <button onClick={mockFn}>Slide 2</button>
+          </div>
+          <div className="slide-3">
+            <button onClick={mockFn}>Slide 3</button>
+          </div>
+        </Carousel>
+      );
+
+      const nextButton = wrapper.find('.slider-control-centerright button');
+
+      nextButton.simulate('click');
+      wrapper.find('.slider-slide .slide-1 button').simulate('click');
+      expect(mockFn).toHaveBeenCalledTimes(1);
+
+      nextButton.simulate('click');
+      wrapper.find('.slider-slide .slide-2 button').simulate('click');
+      expect(mockFn).toHaveBeenCalledTimes(2);
+
+      nextButton.simulate('click');
+      wrapper.find('.slider-slide .slide-3 button').simulate('click');
+      expect(mockFn).toHaveBeenCalledTimes(3);
+
+      nextButton.simulate('click');
+      wrapper.find('.slider-slide .slide-1 button').simulate('click');
+      expect(mockFn).toHaveBeenCalledTimes(4);
+
+      nextButton.simulate('click');
+      wrapper.find('.slider-slide .slide-2 button').simulate('click');
+      expect(mockFn).toHaveBeenCalledTimes(5);
+
+      nextButton.simulate('click');
+      wrapper.find('.slider-slide .slide-3 button').simulate('click');
+      expect(mockFn).toHaveBeenCalledTimes(6);
+    });
   });
 });
